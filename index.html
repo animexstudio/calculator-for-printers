@@ -43,6 +43,33 @@
       margin-top: 1.5rem;
     }
 
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      color: #3b82f6;
+      border-bottom-color: #3b82f6;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
     /* Upload area */
     .upload-area {
       border: 2px dashed #d1d5db;
@@ -84,6 +111,13 @@
       margin-top: 0.5rem;
     }
 
+    .upload-multiple {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #3b82f6;
+      margin-top: 1rem;
+    }
+
     .hidden {
       display: none;
     }
@@ -93,22 +127,48 @@
       margin-top: 1.5rem;
     }
 
-    .flex-container {
+    .image-result {
+      margin-bottom: 2rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .image-header {
+      background-color: #f9fafb;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .image-filename {
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0;
+      padding-right: 1rem;
+    }
+
+    .image-content {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      padding: 1rem;
     }
 
     @media (min-width: 768px) {
-      .flex-container {
+      .image-content {
         flex-direction: row;
+        gap: 1.5rem;
       }
       
       .image-preview-container {
         width: 33.333%;
       }
       
-      .results-content {
+      .image-data-container {
         width: 66.667%;
       }
     }
@@ -117,12 +177,41 @@
       border: 1px solid #e5e7eb;
       border-radius: 0.5rem;
       overflow: hidden;
+      margin-bottom: 1rem;
     }
 
     .image-preview img {
       width: 100%;
       height: auto;
       display: block;
+    }
+
+    .button {
+      padding: 0.5rem 0.75rem;
+      border: none;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .button-blue {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    .button-blue:hover {
+      background-color: #2563eb;
+    }
+
+    .button-gray {
+      background-color: #e5e7eb;
+      color: #1f2937;
+    }
+
+    .button-gray:hover {
+      background-color: #d1d5db;
     }
 
     .reset-button {
@@ -140,6 +229,40 @@
 
     .reset-button:hover {
       background-color: #d1d5db;
+    }
+
+    .export-button {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #10b981;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .export-button:hover {
+      background-color: #059669;
+    }
+
+    .clear-history-button {
+      margin-top: 0.5rem;
+      width: 100%;
+      padding: 0.5rem;
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .clear-history-button:hover {
+      background-color: #dc2626;
     }
 
     /* Analysis section */
@@ -263,6 +386,90 @@
       margin-bottom: 0.25rem;
     }
 
+    /* History section */
+    .history-empty {
+      text-align: center;
+      padding: 3rem 0;
+      color: #6b7280;
+    }
+
+    .history-items {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .history-items {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .history-items {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .history-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .history-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .history-item-thumbnail {
+      height: 180px;
+      background-color: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .history-item-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .history-item-details {
+      padding: 0.75rem;
+    }
+
+    .history-item-filename {
+      font-weight: 500;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-item-dimensions {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin: 0.25rem 0;
+    }
+
+    .history-item-date {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin: 0;
+    }
+
+    .history-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    /* Footer */
     footer {
       background-color: white;
       border-top: 1px solid #e5e7eb;
@@ -273,14 +480,21 @@
       color: #6b7280;
     }
 
-    .debug-info {
-      font-family: monospace;
-      font-size: 12px;
-      margin-top: 20px;
-      padding: 12px;
-      background-color: #f5f5f5;
-      border-radius: 4px;
-      white-space: pre-wrap;
+    .no-results {
+      padding: 2rem;
+      text-align: center;
+      color: #6b7280;
+      font-style: italic;
+    }
+
+    /* Utility classes */
+    .mt-4 {
+      margin-top: 1rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
     }
   </style>
 </head>
@@ -293,103 +507,49 @@
   <main>
     <div class="container">
       <div class="card">
-        <div id="calculator">
+        <div class="tabs">
+          <div class="tab active" data-tab="calculator">Calculator</div>
+          <div class="tab" data-tab="history">Upload History</div>
+        </div>
+
+        <div class="tab-content active" id="calculator-tab">
           <div id="upload-section" class="upload-area">
             <input 
               type="file" 
               id="file-input"
               class="hidden" 
               accept=".jpg,.jpeg,.png,.webp"
+              multiple
             />
             <div>
               <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <p class="upload-title">Drag & drop your image here</p>
+              <p class="upload-title">Drag & drop your images here</p>
               <p class="upload-subtitle">or click to browse files</p>
               <p class="upload-formats">Supported formats: JPG, PNG, WebP (max 10MB)</p>
+              <p class="upload-multiple">Multiple files supported</p>
             </div>
           </div>
           
           <div id="results-section" class="results-container hidden">
-            <div class="flex-container">
-              <div class="image-preview-container">
-                <div class="image-preview">
-                  <img id="image-preview" src="" alt="Preview" />
-                </div>
-                <button id="reset-button" class="reset-button">
-                  Upload Different Image
-                </button>
-              </div>
-              
-              <div class="results-content">
-                <div id="analysis-section" class="analysis-section">
-                  <h2 class="section-title">Image Analysis</h2>
-                  <div class="analysis-card">
-                    <div class="analysis-grid">
-                      <div>
-                        <p class="analysis-item-label">Dimensions</p>
-                        <p id="dimensions" class="analysis-item-value">-</p>
-                      </div>
-                      <div>
-                        <p class="analysis-item-label">Orientation</p>
-                        <p id="orientation" class="analysis-item-value">-</p>
-                      </div>
-                      <div>
-                        <p class="analysis-item-label">Aspect Ratio</p>
-                        <p id="aspect-ratio" class="analysis-item-value">-</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div id="sizes-section">
-                  <h2 class="section-title">Optimal Print Sizes</h2>
-                  <div style="overflow-x: auto;">
-                    <table class="results-table">
-                      <thead>
-                        <tr>
-                          <th>Quality</th>
-                          <th>DPI</th>
-                          <th>Recommended Sizes (inches)</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="quality-excellent">Excellent</td>
-                          <td>300 DPI</td>
-                          <td id="sizes-300">
-                            <span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="quality-good">Good</td>
-                          <td>150 DPI</td>
-                          <td id="sizes-150">
-                            <span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="quality-acceptable">Acceptable</td>
-                          <td>100 DPI</td>
-                          <td id="sizes-100">
-                            <span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="info-text">
-                    <p><strong>DPI (Dots Per Inch)</strong> indicates print quality:</p>
-                    <ul class="info-list">
-                      <li><span class="quality-excellent">300 DPI</span>: Professional quality, suitable for close viewing</li>
-                      <li><span class="quality-good">150 DPI</span>: Good quality, suitable for wall art viewed from a few feet away</li>
-                      <li><span class="quality-acceptable">100 DPI</span>: Acceptable for large formats viewed from a distance</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+            <div class="actions">
+              <button id="reset-all-button" class="button button-gray">Upload More Images</button>
+              <button id="export-current-button" class="button button-blue">Export Results to CSV</button>
             </div>
+            <div id="results-content" class="mt-4">
+              <!-- Image results will be injected here -->
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="history-tab">
+          <div id="history-container">
+            <!-- History items will be injected here -->
+          </div>
+          <div class="history-buttons">
+            <button id="export-history-button" class="export-button">Export All History to CSV</button>
+            <button id="clear-history-button" class="clear-history-button">Clear History</button>
           </div>
         </div>
       </div>
@@ -406,17 +566,42 @@
     document.getElementById('current-year').textContent = new Date().getFullYear();
 
     // DOM Elements
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
     const uploadSection = document.getElementById('upload-section');
     const fileInput = document.getElementById('file-input');
     const resultsSection = document.getElementById('results-section');
-    const imagePreview = document.getElementById('image-preview');
-    const resetButton = document.getElementById('reset-button');
-    const dimensionsEl = document.getElementById('dimensions');
-    const orientationEl = document.getElementById('orientation');
-    const aspectRatioEl = document.getElementById('aspect-ratio');
-    const sizes300El = document.getElementById('sizes-300');
-    const sizes150El = document.getElementById('sizes-150');
-    const sizes100El = document.getElementById('sizes-100');
+    const resultsContent = document.getElementById('results-content');
+    const resetAllButton = document.getElementById('reset-all-button');
+    const exportCurrentButton = document.getElementById('export-current-button');
+    const historyContainer = document.getElementById('history-container');
+    const exportHistoryButton = document.getElementById('export-history-button');
+    const clearHistoryButton = document.getElementById('clear-history-button');
+
+    // Current session storage
+    let currentResults = [];
+
+    // Tab switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.getAttribute('data-tab');
+        
+        // Update active tab
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Show corresponding content
+        tabContents.forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+        
+        // Load history if needed
+        if (tabName === 'history') {
+          displayHistory();
+        }
+      });
+    });
 
     // Expanded set of standard US print sizes grouped by orientation
     const standardSizes = {
@@ -433,8 +618,8 @@
         { width: 30, height: 20 },
         { width: 36, height: 24 },
         { width: 40, height: 30 },
-        { width: 40, height: 60 },   // Added from your list
-        { width: 15, height: 10 },   // Common landscape sizes
+        { width: 40, height: 60 },
+        { width: 15, height: 10 },
         { width: 18, height: 12 },
         { width: 30, height: 24 },
         { width: 36, height: 30 },
@@ -454,7 +639,7 @@
         { width: 20, height: 30 },
         { width: 24, height: 36 },
         { width: 30, height: 40 },
-        { width: 60, height: 40 }    // Added from your list
+        { width: 60, height: 40 }
       ],
       square: [
         { width: 8, height: 8 },
@@ -466,7 +651,7 @@
         { width: 30, height: 30 },
         { width: 36, height: 36 },
         { width: 40, height: 40 },
-        { width: 48, height: 48 }    // Added from your list
+        { width: 48, height: 48 }
       ],
       // Add near-square sizes for paintings like Girl with Pearl Earring
       nearsquare: [
@@ -502,38 +687,159 @@
       e.preventDefault();
       uploadSection.classList.remove('dragging');
       
-      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-        handleFile(e.dataTransfer.files[0]);
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleFiles(e.dataTransfer.files);
       }
     });
 
     fileInput.addEventListener('change', (e) => {
-      if (e.target.files && e.target.files[0]) {
-        handleFile(e.target.files[0]);
+      if (e.target.files && e.target.files.length > 0) {
+        handleFiles(e.target.files);
       }
     });
 
-    resetButton.addEventListener('click', resetCalculator);
+    resetAllButton.addEventListener('click', () => {
+      resetCalculator();
+    });
 
-    // Functions
-    function handleFile(file) {
+    exportCurrentButton.addEventListener('click', () => {
+      exportToCSV(currentResults);
+    });
+
+    exportHistoryButton.addEventListener('click', () => {
+      const history = JSON.parse(localStorage.getItem('printSizeHistory') || '[]');
+      exportToCSV(history);
+    });
+
+    clearHistoryButton.addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear all upload history? This cannot be undone.')) {
+        localStorage.removeItem('printSizeHistory');
+        displayHistory();
+      }
+    });
+
+    // Process multiple files
+    function handleFiles(files) {
+      // Clear current results
+      resultsContent.innerHTML = '';
+      currentResults = [];
+      
+      // Show results section
+      uploadSection.classList.add('hidden');
+      resultsSection.classList.remove('hidden');
+      
+      // Process each file
+      Array.from(files).forEach((file, index) => {
+        processFile(file, index);
+      });
+    }
+
+    // Process a single file
+    function processFile(file, index) {
       // Check file type
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
       if (!validTypes.includes(file.type)) {
-        alert('Please upload a valid image file (JPG, PNG, or WebP)');
+        createErrorResult(file.name, 'Invalid file type. Please upload JPG, PNG, or WebP files.');
         return;
       }
       
       // Check file size (10MB limit)
       if (file.size > 10 * 1024 * 1024) {
-        alert('File size should be less than 10MB');
+        createErrorResult(file.name, 'File too large. Maximum size is 10MB.');
         return;
       }
       
-      // Create preview
+      // Create result container
+      const resultContainer = document.createElement('div');
+      resultContainer.className = 'image-result';
+      resultContainer.id = `result-${index}`;
+      
+      // Add header
+      const header = document.createElement('div');
+      header.className = 'image-header';
+      header.innerHTML = `
+        <p class="image-filename">${file.name}</p>
+        <div class="actions">
+          <button class="button button-gray remove-result" data-index="${index}">Remove</button>
+        </div>
+      `;
+      resultContainer.appendChild(header);
+      
+      // Add content placeholder
+      const content = document.createElement('div');
+      content.className = 'image-content';
+      content.innerHTML = `
+        <div class="image-preview-container">
+          <div class="image-preview">
+            <img id="preview-${index}" src="" alt="Preview">
+          </div>
+        </div>
+        <div class="image-data-container" id="data-${index}">
+          <p>Loading...</p>
+        </div>
+      `;
+      resultContainer.appendChild(content);
+      
+      // Add to results
+      resultsContent.appendChild(resultContainer);
+      
+      // Add remove event listener
+      resultContainer.querySelector('.remove-result').addEventListener('click', function() {
+        const index = this.getAttribute('data-index');
+        removeResult(index);
+      });
+      
+      // Process the image
+      analyzeImage(file, index);
+    }
+
+    // Create error result for invalid files
+    function createErrorResult(filename, errorMessage) {
+      const errorContainer = document.createElement('div');
+      errorContainer.className = 'image-result';
+      errorContainer.innerHTML = `
+        <div class="image-header">
+          <p class="image-filename">${filename}</p>
+          <div class="actions">
+            <button class="button button-gray remove-result">Remove</button>
+          </div>
+        </div>
+        <div class="image-content">
+          <p style="color: #ef4444; padding: 1rem;">${errorMessage}</p>
+        </div>
+      `;
+      
+      resultsContent.appendChild(errorContainer);
+      
+      // Add remove event listener
+      errorContainer.querySelector('.remove-result').addEventListener('click', function() {
+        errorContainer.remove();
+      });
+    }
+
+    // Remove a result
+    function removeResult(index) {
+      const element = document.getElementById(`result-${index}`);
+      if (element) {
+        element.remove();
+      }
+      
+      // If no results left, show upload section again
+      if (resultsContent.children.length === 0) {
+        resetCalculator();
+      }
+    }
+
+    // Analyze image
+    function analyzeImage(file, index) {
       const reader = new FileReader();
+      
       reader.onload = (e) => {
-        imagePreview.src = e.target.result;
+        const imgPreview = document.getElementById(`preview-${index}`);
+        imgPreview.src = e.target.result;
+        
+        // Create a small thumbnail for storage
+        const thumbnail = createThumbnail(e.target.result);
         
         // Load image to get dimensions
         const img = new Image();
@@ -542,7 +848,7 @@
           const height = img.height;
           const aspectRatio = parseFloat((width / height).toFixed(2));
           
-          // Determine orientation with improved logic
+          // Determine orientation
           let orientation;
           if (Math.abs(aspectRatio - 1) < 0.1) {
             // If it's within 10% of square, consider it square
@@ -556,40 +862,53 @@
             orientation = 'portrait';
           }
           
-          const data = {
+          const imageData = {
+            filename: file.name,
             width,
             height,
             aspectRatio,
             orientation,
-            originalOrientation: orientation // Keep for comparison
+            thumbnail
           };
           
-          // Update UI
-          dimensionsEl.textContent = `${width} × ${height} px`;
-          orientationEl.textContent = orientation.charAt(0).toUpperCase() + orientation.slice(1);
-          aspectRatioEl.textContent = aspectRatio;
+          // Calculate print sizes
+          const results = calculateOptimalSizes(imageData);
           
-          calculateOptimalSizes(data);
+          // Update UI with results
+          updateResultsUI(imageData, results, index);
           
-          // Show results section
-          uploadSection.classList.add('hidden');
-          resultsSection.classList.remove('hidden');
+          // Save to history
+          saveToHistory(imageData, results);
+          
+          // Save to current session
+          currentResults.push({
+            imageData,
+            results,
+            timestamp: new Date().toISOString()
+          });
         };
         img.src = e.target.result;
       };
+      
       reader.readAsDataURL(file);
     }
 
-    function calculateOptimalSizes(data) {
-      const { width, height, aspectRatio, orientation } = data;
+    // Create a small thumbnail for storage
+    function createThumbnail(dataUrl) {
+      return dataUrl; // For simplicity, just store the full data URL
       
-      // Debug storage to track what's happening
-      const debugInfo = {
-        imageInfo: data,
-        results: {}
-      };
+      // In a production environment, you'd want to create a smaller thumbnail:
+      // 1. Create a canvas element
+      // 2. Draw the image resized to a small size (e.g., 100x100)
+      // 3. Get the data URL with reduced quality
+    }
+
+    // Calculate optimal print sizes
+    function calculateOptimalSizes(imageData) {
+      const { width, height, aspectRatio, orientation } = imageData;
+      const results = {};
       
-      // Collect all possible sizes to consider
+      // Collect all possible orientations to check
       let allOrientations = [orientation];
       
       // For near-square images, also check square, landscape, and portrait sizes
@@ -605,8 +924,6 @@
       }
       
       dpiLevels.forEach(dpi => {
-        debugInfo.results[dpi] = [];
-        
         const maxWidthInches = width / dpi;
         const maxHeightInches = height / dpi;
         
@@ -630,13 +947,6 @@
                 ratioDifference,
                 area: size.width * size.height
               });
-              
-              debugInfo.results[dpi].push({
-                size: `${size.width}×${size.height}`,
-                orientation: currentOrientation,
-                ratioDifference,
-                area: size.width * size.height
-              });
             }
           });
         });
@@ -644,59 +954,3 @@
         // If we have possible sizes, sort and filter them
         let filteredSizes = [];
         if (allPossibleSizes.length > 0) {
-          // First sort by ratio difference (aspect ratio match)
-          allPossibleSizes.sort((a, b) => a.ratioDifference - b.ratioDifference);
-          
-          // Get the best matches (tolerance: 25%)
-          let bestMatches = allPossibleSizes.filter(size => size.ratioDifference <= 0.25);
-          
-          // If no sizes within tolerance, take the 5 closest matches
-          if (bestMatches.length === 0) {
-            bestMatches = allPossibleSizes.slice(0, 5);
-          }
-          
-          // Sort by size (larger first)
-          bestMatches.sort((a, b) => (b.area) - (a.area));
-          
-          // Take the top sizes
-          filteredSizes = bestMatches.slice(0, 8);
-        }
-        
-        // Update UI with results
-        const sizesArray = filteredSizes.map(size => `${size.width}×${size.height}`);
-        const sizesElement = document.getElementById(`sizes-${dpi}`);
-        
-        if (sizesArray.length > 0) {
-          let html = '<div class="size-tags-container">';
-          sizesArray.forEach(size => {
-            const tagClass = dpi === 300 ? 'size-tag-excellent' : dpi === 150 ? 'size-tag-good' : 'size-tag-acceptable';
-            html += `<span class="size-tag ${tagClass}">${size}</span>`;
-          });
-          html += '</div>';
-          sizesElement.innerHTML = html;
-        } else {
-          sizesElement.innerHTML = '<span style="font-style: italic; color: #6b7280;">No standard sizes match</span>';
-        }
-      });
-    }
-
-    function resetCalculator() {
-      // Reset file input
-      fileInput.value = '';
-      
-      // Hide results section and show upload section
-      resultsSection.classList.add('hidden');
-      uploadSection.classList.remove('hidden');
-      
-      // Clear results
-      dimensionsEl.textContent = '-';
-      orientationEl.textContent = '-';
-      aspectRatioEl.textContent = '-';
-      
-      sizes300El.innerHTML = '<span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>';
-      sizes150El.innerHTML = '<span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>';
-      sizes100El.innerHTML = '<span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>';
-    }
-  </script>
-</body>
-</html>
