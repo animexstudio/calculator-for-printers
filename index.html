@@ -272,6 +272,16 @@
       font-size: 0.875rem;
       color: #6b7280;
     }
+
+    .debug-info {
+      font-family: monospace;
+      font-size: 12px;
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
@@ -457,6 +467,17 @@
         { width: 36, height: 36 },
         { width: 40, height: 40 },
         { width: 48, height: 48 }    // Added from your list
+      ],
+      // Add near-square sizes for paintings like Girl with Pearl Earring
+      nearsquare: [
+        { width: 8, height: 10 },
+        { width: 10, height: 12 },
+        { width: 12, height: 14 },
+        { width: 16, height: 18 },
+        { width: 18, height: 20 },
+        { width: 20, height: 22 },
+        { width: 24, height: 27 },
+        { width: 30, height: 34 }
       ]
     };
 
@@ -521,9 +542,14 @@
           const height = img.height;
           const aspectRatio = parseFloat((width / height).toFixed(2));
           
+          // Determine orientation with improved logic
           let orientation;
-          if (Math.abs(aspectRatio - 1) < 0.05) {
+          if (Math.abs(aspectRatio - 1) < 0.1) {
+            // If it's within 10% of square, consider it square
             orientation = 'square';
+          } else if (Math.abs(aspectRatio - 1.14) < 0.1) {
+            // Near-square paintings like Vermeer's Girl with Pearl Earring (ratio ~1.14)
+            orientation = 'nearsquare';
           } else if (width > height) {
             orientation = 'landscape';
           } else {
@@ -534,7 +560,8 @@
             width,
             height,
             aspectRatio,
-            orientation
+            orientation,
+            originalOrientation: orientation // Keep for comparison
           };
           
           // Update UI
@@ -556,49 +583,84 @@
     function calculateOptimalSizes(data) {
       const { width, height, aspectRatio, orientation } = data;
       
+      // Debug storage to track what's happening
+      const debugInfo = {
+        imageInfo: data,
+        results: {}
+      };
+      
+      // Collect all possible sizes to consider
+      let allOrientations = [orientation];
+      
+      // For near-square images, also check square, landscape, and portrait sizes
+      if (orientation === 'nearsquare' || Math.abs(aspectRatio - 1) < 0.2) {
+        allOrientations = ['square', 'landscape', 'portrait', 'nearsquare'];
+      }
+      
+      // For landscape with aspect ratio close to portrait, or vice versa, add the other orientation
+      if (orientation === 'landscape' && aspectRatio < 1.5) {
+        allOrientations.push('portrait');
+      } else if (orientation === 'portrait' && aspectRatio > 0.7) {
+        allOrientations.push('landscape');
+      }
+      
       dpiLevels.forEach(dpi => {
+        debugInfo.results[dpi] = [];
+        
         const maxWidthInches = width / dpi;
         const maxHeightInches = height / dpi;
         
-        // Filter standard sizes based on orientation and max printable size
-        let filteredSizes = standardSizes[orientation].filter(size => {
-          // Check if the size fits within max printable dimensions
-          if (size.width > maxWidthInches || size.height > maxHeightInches) {
-            return false;
-          }
+        // Fallback collection for if nothing matched
+        let allPossibleSizes = [];
+        
+        // Check each possible orientation
+        allOrientations.forEach(currentOrientation => {
+          if (!standardSizes[currentOrientation]) return;
           
-          // More relaxed aspect ratio tolerance (15%)
-          const sizeRatio = size.width / size.height;
-          const tolerance = 0.15; // 15%
-          
-          return Math.abs(sizeRatio - aspectRatio) / aspectRatio <= tolerance;
+          // Get sizes that fit the max dimensions
+          standardSizes[currentOrientation].forEach(size => {
+            if (size.width <= maxWidthInches && size.height <= maxHeightInches) {
+              // Calculate how well it matches the aspect ratio (lower is better)
+              const sizeRatio = size.width / size.height;
+              const ratioDifference = Math.abs(sizeRatio - aspectRatio) / aspectRatio;
+              
+              allPossibleSizes.push({
+                ...size,
+                orientation: currentOrientation,
+                ratioDifference,
+                area: size.width * size.height
+              });
+              
+              debugInfo.results[dpi].push({
+                size: `${size.width}×${size.height}`,
+                orientation: currentOrientation,
+                ratioDifference,
+                area: size.width * size.height
+              });
+            }
+          });
         });
         
-        // If no sizes match with the tolerance, find the closest matches
-        if (filteredSizes.length === 0) {
-          // Get all sizes that fit within max dimensions
-          let sizesThatFit = standardSizes[orientation].filter(size => 
-            size.width <= maxWidthInches && size.height <= maxHeightInches
-          );
+        // If we have possible sizes, sort and filter them
+        let filteredSizes = [];
+        if (allPossibleSizes.length > 0) {
+          // First sort by ratio difference (aspect ratio match)
+          allPossibleSizes.sort((a, b) => a.ratioDifference - b.ratioDifference);
           
-          // If there are sizes that fit, find the closest by aspect ratio
-          if (sizesThatFit.length > 0) {
-            // Calculate ratio difference for each size
-            sizesThatFit.forEach(size => {
-              const sizeRatio = size.width / size.height;
-              size.ratioDifference = Math.abs(sizeRatio - aspectRatio) / aspectRatio;
-            });
-            
-            // Sort by ratio difference
-            sizesThatFit.sort((a, b) => a.ratioDifference - b.ratioDifference);
-            
-            // Take the top 3 closest matches
-            filteredSizes = sizesThatFit.slice(0, 3);
+          // Get the best matches (tolerance: 25%)
+          let bestMatches = allPossibleSizes.filter(size => size.ratioDifference <= 0.25);
+          
+          // If no sizes within tolerance, take the 5 closest matches
+          if (bestMatches.length === 0) {
+            bestMatches = allPossibleSizes.slice(0, 5);
           }
+          
+          // Sort by size (larger first)
+          bestMatches.sort((a, b) => (b.area) - (a.area));
+          
+          // Take the top sizes
+          filteredSizes = bestMatches.slice(0, 8);
         }
-        
-        // Sort by size (larger first)
-        filteredSizes.sort((a, b) => (b.width * b.height) - (a.width * a.height));
         
         // Update UI with results
         const sizesArray = filteredSizes.map(size => `${size.width}×${size.height}`);
