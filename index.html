@@ -118,6 +118,20 @@
       margin-top: 1rem;
     }
 
+    .browse-button {
+      color: #3b82f6;
+      font-weight: 500;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .browse-button:hover {
+      color: #2563eb;
+    }
+
     .hidden {
       display: none;
     }
@@ -521,12 +535,12 @@
               accept=".jpg,.jpeg,.png,.webp"
               multiple
             />
-            <div>
+            <div class="upload-content">
               <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <p class="upload-title">Drag & drop your images here</p>
-              <p class="upload-subtitle">or click to browse files</p>
+              <p class="upload-subtitle">or <button id="browse-button" class="browse-button">click here to browse files</button></p>
               <p class="upload-formats">Supported formats: JPG, PNG, WebP (max 10MB)</p>
               <p class="upload-multiple">Multiple files supported</p>
             </div>
@@ -570,6 +584,7 @@
     const tabContents = document.querySelectorAll('.tab-content');
     const uploadSection = document.getElementById('upload-section');
     const fileInput = document.getElementById('file-input');
+    const browseButton = document.getElementById('browse-button');
     const resultsSection = document.getElementById('results-section');
     const resultsContent = document.getElementById('results-content');
     const resetAllButton = document.getElementById('reset-all-button');
@@ -671,6 +686,13 @@
 
     // Event Listeners
     uploadSection.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    // Specific browse button event handler
+    browseButton.addEventListener('click', (e) => {
+      e.preventDefault(); // Prevent default button behavior
+      e.stopPropagation(); // Stop event from bubbling up to the upload area
       fileInput.click();
     });
 
@@ -950,3 +972,379 @@
             }
           });
         });
+        
+        // If we have possible sizes, sort and filter them
+        let filteredSizes = [];
+        if (allPossibleSizes.length > 0) {
+          // First sort by ratio difference (aspect ratio match)
+          allPossibleSizes.sort((a, b) => a.ratioDifference - b.ratioDifference);
+          
+          // Get the best matches (tolerance: 25%)
+          let bestMatches = allPossibleSizes.filter(size => size.ratioDifference <= 0.25);
+          
+          // If no sizes within tolerance, take the 5 closest matches
+          if (bestMatches.length === 0) {
+            bestMatches = allPossibleSizes.slice(0, 5);
+          }
+          
+          // Sort by size (larger first)
+          bestMatches.sort((a, b) => (b.area) - (a.area));
+          
+          // Take the top sizes
+          filteredSizes = bestMatches.slice(0, 8);
+        }
+        
+        // Format the sizes for display and storage
+        results[dpi] = filteredSizes.map(size => `${size.width}×${size.height}`);
+      });
+      
+      return results;
+    }
+
+    // Update results UI
+    function updateResultsUI(imageData, results, index) {
+      const dataContainer = document.getElementById(`data-${index}`);
+      
+      let html = `
+        <div class="analysis-section">
+          <h2 class="section-title">Image Analysis</h2>
+          <div class="analysis-card">
+            <div class="analysis-grid">
+              <div>
+                <p class="analysis-item-label">Dimensions</p>
+                <p class="analysis-item-value">${imageData.width} × ${imageData.height} px</p>
+              </div>
+              <div>
+                <p class="analysis-item-label">Orientation</p>
+                <p class="analysis-item-value">${imageData.orientation.charAt(0).toUpperCase() + imageData.orientation.slice(1)}</p>
+              </div>
+              <div>
+                <p class="analysis-item-label">Aspect Ratio</p>
+                <p class="analysis-item-value">${imageData.aspectRatio}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h2 class="section-title">Optimal Print Sizes</h2>
+          <div style="overflow-x: auto;">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th>Quality</th>
+                  <th>DPI</th>
+                  <th>Recommended Sizes (inches)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="quality-excellent">Excellent</td>
+                  <td>300 DPI</td>
+                  <td>
+                    ${createSizeTags(results[300], 'excellent')}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="quality-good">Good</td>
+                  <td>150 DPI</td>
+                  <td>
+                    ${createSizeTags(results[150], 'good')}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="quality-acceptable">Acceptable</td>
+                  <td>100 DPI</td>
+                  <td>
+                    ${createSizeTags(results[100], 'acceptable')}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-text">
+            <p><strong>DPI (Dots Per Inch)</strong> indicates print quality:</p>
+            <ul class="info-list">
+              <li><span class="quality-excellent">300 DPI</span>: Professional quality, suitable for close viewing</li>
+              <li><span class="quality-good">150 DPI</span>: Good quality, suitable for wall art viewed from a few feet away</li>
+              <li><span class="quality-acceptable">100 DPI</span>: Acceptable for large formats viewed from a distance</li>
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      dataContainer.innerHTML = html;
+    }
+
+    // Create size tags HTML
+    function createSizeTags(sizes, quality) {
+      if (!sizes || sizes.length === 0) {
+        return '<span style="font-style: italic; color: #6b7280;">No standard sizes match</span>';
+      }
+      
+      let html = '<div class="size-tags-container">';
+      sizes.forEach(size => {
+        html += `<span class="size-tag size-tag-${quality}">${size}</span>`;
+      });
+      html += '</div>';
+      
+      return html;
+    }
+
+    // Save to history
+    function saveToHistory(imageData, results) {
+      // Get existing history or initialize empty array
+      const history = JSON.parse(localStorage.getItem('printSizeHistory') || '[]');
+      
+      // Add new entry with timestamp
+      history.push({
+        imageData: {
+          filename: imageData.filename,
+          width: imageData.width,
+          height: imageData.height,
+          aspectRatio: imageData.aspectRatio,
+          orientation: imageData.orientation,
+          thumbnail: imageData.thumbnail
+        },
+        results,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Save back to localStorage (limit to last 50 items)
+      localStorage.setItem('printSizeHistory', JSON.stringify(history.slice(-50)));
+    }
+
+    // Display history
+    function displayHistory() {
+      const history = JSON.parse(localStorage.getItem('printSizeHistory') || '[]');
+      
+      if (history.length === 0) {
+        historyContainer.innerHTML = `
+          <div class="history-empty">
+            <p>No upload history found</p>
+            <p>Images you analyze will appear here</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = '<div class="history-items">';
+      
+      // Process most recent first
+      history.slice().reverse().forEach((item, index) => {
+        html += `
+          <div class="history-item" data-index="${index}">
+            <div class="history-item-thumbnail">
+              <img src="${item.imageData.thumbnail}" alt="Thumbnail">
+            </div>
+            <div class="history-item-details">
+              <p class="history-item-filename">${item.imageData.filename}</p>
+              <p class="history-item-dimensions">${item.imageData.width}×${item.imageData.height} (${item.imageData.orientation})</p>
+              <p class="history-item-date">${new Date(item.timestamp).toLocaleString()}</p>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      
+      historyContainer.innerHTML = html;
+      
+      // Add click handlers for history items
+      document.querySelectorAll('.history-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const index = this.getAttribute('data-index');
+          const historyItem = history.slice().reverse()[index];
+          
+          // Switch to calculator tab
+          document.querySelector('.tab[data-tab="calculator"]').click();
+          
+          // Create a "virtual" file from the history item
+          displayHistoryItem(historyItem);
+        });
+      });
+    }
+
+    // Display a history item in the calculator
+    function displayHistoryItem(historyItem) {
+      // Show results section
+      uploadSection.classList.add('hidden');
+      resultsSection.classList.remove('hidden');
+      
+      // Clear current results
+      resultsContent.innerHTML = '';
+      currentResults = [];
+      
+      // Create result container
+      const resultContainer = document.createElement('div');
+      resultContainer.className = 'image-result';
+      resultContainer.id = 'result-history';
+      
+      // Add header
+      const header = document.createElement('div');
+      header.className = 'image-header';
+      header.innerHTML = `
+        <p class="image-filename">${historyItem.imageData.filename} (From History)</p>
+        <div class="actions">
+          <button class="button button-gray remove-result" data-index="history">Remove</button>
+        </div>
+      `;
+      resultContainer.appendChild(header);
+      
+      // Add content
+      const content = document.createElement('div');
+      content.className = 'image-content';
+      content.innerHTML = `
+        <div class="image-preview-container">
+          <div class="image-preview">
+            <img src="${historyItem.imageData.thumbnail}" alt="Preview">
+          </div>
+        </div>
+        <div class="image-data-container">
+          <div class="analysis-section">
+            <h2 class="section-title">Image Analysis</h2>
+            <div class="analysis-card">
+              <div class="analysis-grid">
+                <div>
+                  <p class="analysis-item-label">Dimensions</p>
+                  <p class="analysis-item-value">${historyItem.imageData.width} × ${historyItem.imageData.height} px</p>
+                </div>
+                <div>
+                  <p class="analysis-item-label">Orientation</p>
+                  <p class="analysis-item-value">${historyItem.imageData.orientation.charAt(0).toUpperCase() + historyItem.imageData.orientation.slice(1)}</p>
+                </div>
+                <div>
+                  <p class="analysis-item-label">Aspect Ratio</p>
+                  <p class="analysis-item-value">${historyItem.imageData.aspectRatio}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h2 class="section-title">Optimal Print Sizes</h2>
+            <div style="overflow-x: auto;">
+              <table class="results-table">
+                <thead>
+                  <tr>
+                    <th>Quality</th>
+                    <th>DPI</th>
+                    <th>Recommended Sizes (inches)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="quality-excellent">Excellent</td>
+                    <td>300 DPI</td>
+                    <td>
+                      ${createSizeTags(historyItem.results[300], 'excellent')}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="quality-good">Good</td>
+                    <td>150 DPI</td>
+                    <td>
+                      ${createSizeTags(historyItem.results[150], 'good')}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="quality-acceptable">Acceptable</td>
+                    <td>100 DPI</td>
+                    <td>
+                      ${createSizeTags(historyItem.results[100], 'acceptable')}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="info-text">
+              <p><strong>DPI (Dots Per Inch)</strong> indicates print quality:</p>
+              <ul class="info-list">
+                <li><span class="quality-excellent">300 DPI</span>: Professional quality, suitable for close viewing</li>
+                <li><span class="quality-good">150 DPI</span>: Good quality, suitable for wall art viewed from a few feet away</li>
+                <li><span class="quality-acceptable">100 DPI</span>: Acceptable for large formats viewed from a distance</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      `;
+      resultContainer.appendChild(content);
+      
+      // Add to results
+      resultsContent.appendChild(resultContainer);
+      
+      // Add remove event listener
+      resultContainer.querySelector('.remove-result').addEventListener('click', function() {
+        resultContainer.remove();
+        resetCalculator();
+      });
+      
+      // Add to current results for export
+      currentResults.push({
+        imageData: historyItem.imageData,
+        results: historyItem.results,
+        timestamp: historyItem.timestamp
+      });
+    }
+
+    // Export to CSV
+    function exportToCSV(data) {
+      if (data.length === 0) {
+        alert('No data to export.');
+        return;
+      }
+      
+      // Create CSV content
+      let csvContent = 'data:text/csv;charset=utf-8,';
+      
+      // Add headers
+      csvContent += 'Filename,Dimensions,Aspect Ratio,Orientation,Date,300 DPI Sizes,150 DPI Sizes,100 DPI Sizes\n';
+      
+      // Add data rows
+      data.forEach(item => {
+        const row = [
+          item.imageData.filename,
+          `${item.imageData.width}×${item.imageData.height}`,
+          item.imageData.aspectRatio,
+          item.imageData.orientation,
+          new Date(item.timestamp).toLocaleString(),
+          (item.results[300] || []).join(' | '),
+          (item.results[150] || []).join(' | '),
+          (item.results[100] || []).join(' | ')
+        ];
+        
+        // Escape any commas in the data
+        const escapedRow = row.map(field => {
+          const fieldStr = String(field || '');
+          return `"${fieldStr.replace(/"/g, '""')}"`;
+        });
+        
+        csvContent += escapedRow.join(',') + '\n';
+      });
+      
+      // Create download link
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'print_calculator_results.csv');
+      document.body.appendChild(link);
+      
+      // Trigger download
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Reset calculator
+    function resetCalculator() {
+      fileInput.value = '';
+      resultsContent.innerHTML = '';
+      currentResults = [];
+      resultsSection.classList.add('hidden');
+      uploadSection.classList.remove('hidden');
+    }
+
+    // Initialize history tab
+    displayHistory();
+  </script>
+</body>
+</html>
