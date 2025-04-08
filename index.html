@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optimal Print Size Calculator</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    header {
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem 0;
+    }
+
+    header h1 {
+      text-align: center;
+      font-size: 1.875rem;
+      font-weight: bold;
+      color: #111827;
+      margin: 0;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    /* Upload area */
+    .upload-area {
+      border: 2px dashed #d1d5db;
+      border-radius: 0.5rem;
+      padding: 2.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .upload-area.dragging {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+    }
+
+    .upload-icon {
+      width: 3rem;
+      height: 3rem;
+      color: #9ca3af;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    .upload-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-subtitle {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin: 0.5rem 0;
+    }
+
+    .upload-formats {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: 0.5rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Results area */
+    .results-container {
+      margin-top: 1.5rem;
+    }
+
+    .flex-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .flex-container {
+        flex-direction: row;
+      }
+      
+      .image-preview-container {
+        width: 33.333%;
+      }
+      
+      .results-content {
+        width: 66.667%;
+      }
+    }
+
+    .image-preview {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .reset-button {
+      width: 100%;
+      padding: 0.5rem 0;
+      margin-top: 1rem;
+      background-color: #e5e7eb;
+      border: none;
+      border-radius: 0.5rem;
+      color: #1f2937;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .reset-button:hover {
+      background-color: #d1d5db;
+    }
+
+    /* Analysis section */
+    .analysis-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .analysis-card {
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .analysis-item-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin: 0;
+    }
+
+    .analysis-item-value {
+      font-weight: 500;
+      margin: 0.25rem 0 0.5rem 0;
+    }
+
+    /* Results table */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .results-table th {
+      background-color: #f9fafb;
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    .results-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .results-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .quality-excellent {
+      color: #059669;
+      font-weight: 500;
+    }
+
+    .quality-good {
+      color: #d97706;
+      font-weight: 500;
+    }
+
+    .quality-acceptable {
+      color: #dc2626;
+      font-weight: 500;
+    }
+
+    .size-tag {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .size-tag-excellent {
+      background-color: #d1fae5;
+      color: #065f46;
+    }
+
+    .size-tag-good {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+
+    .size-tag-acceptable {
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .size-tags-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .info-text {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-top: 1rem;
+    }
+
+    .info-list {
+      list-style-type: disc;
+      padding-left: 1.25rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .info-list li {
+      margin-bottom: 0.25rem;
+    }
+
+    footer {
+      background-color: white;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 2.5rem;
+      padding: 1.5rem 0;
+      text-align: center;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Optimal Print Size Calculator</h1>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <div class="card">
+        <div id="calculator">
+          <div id="upload-section" class="upload-area">
+            <input 
+              type="file" 
+              id="file-input"
+              class="hidden" 
+              accept=".jpg,.jpeg,.png,.webp"
+            />
+            <div>
+              <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p class="upload-title">Drag & drop your image here</p>
+              <p class="upload-subtitle">or click to browse files</p>
+              <p class="upload-formats">Supported formats: JPG, PNG, WebP (max 10MB)</p>
+            </div>
+          </div>
+          
+          <div id="results-section" class="results-container hidden">
+            <div class="flex-container">
+              <div class="image-preview-container">
+                <div class="image-preview">
+                  <img id="image-preview" src="" alt="Preview" />
+                </div>
+                <button id="reset-button" class="reset-button">
+                  Upload Different Image
+                </button>
+              </div>
+              
+              <div class="results-content">
+                <div id="analysis-section" class="analysis-section">
+                  <h2 class="section-title">Image Analysis</h2>
+                  <div class="analysis-card">
+                    <div class="analysis-grid">
+                      <div>
+                        <p class="analysis-item-label">Dimensions</p>
+                        <p id="dimensions" class="analysis-item-value">-</p>
+                      </div>
+                      <div>
+                        <p class="analysis-item-label">Orientation</p>
+                        <p id="orientation" class="analysis-item-value">-</p>
+                      </div>
+                      <div>
+                        <p class="analysis-item-label">Aspect Ratio</p>
+                        <p id="aspect-ratio" class="analysis-item-value">-</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div id="sizes-section">
+                  <h2 class="section-title">Optimal Print Sizes</h2>
+                  <div style="overflow-x: auto;">
+                    <table class="results-table">
+                      <thead>
+                        <tr>
+                          <th>Quality</th>
+                          <th>DPI</th>
+                          <th>Recommended Sizes (inches)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="quality-excellent">Excellent</td>
+                          <td>300 DPI</td>
+                          <td id="sizes-300">
+                            <span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="quality-good">Good</td>
+                          <td>150 DPI</td>
+                          <td id="sizes-150">
+                            <span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="quality-acceptable">Acceptable</td>
+                          <td>100 DPI</td>
+                          <td id="sizes-100">
+                            <span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="info-text">
+                    <p><strong>DPI (Dots Per Inch)</strong> indicates print quality:</p>
+                    <ul class="info-list">
+                      <li><span class="quality-excellent">300 DPI</span>: Professional quality, suitable for close viewing</li>
+                      <li><span class="quality-good">150 DPI</span>: Good quality, suitable for wall art viewed from a few feet away</li>
+                      <li><span class="quality-acceptable">100 DPI</span>: Acceptable for large formats viewed from a distance</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="container">
+      <p>© <span id="current-year"></span> Optimal Print Size Calculator. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // DOM Elements
+    const uploadSection = document.getElementById('upload-section');
+    const fileInput = document.getElementById('file-input');
+    const resultsSection = document.getElementById('results-section');
+    const imagePreview = document.getElementById('image-preview');
+    const resetButton = document.getElementById('reset-button');
+    const dimensionsEl = document.getElementById('dimensions');
+    const orientationEl = document.getElementById('orientation');
+    const aspectRatioEl = document.getElementById('aspect-ratio');
+    const sizes300El = document.getElementById('sizes-300');
+    const sizes150El = document.getElementById('sizes-150');
+    const sizes100El = document.getElementById('sizes-100');
+
+    // Standard US print sizes grouped by orientation
+    const standardSizes = {
+      landscape: [
+        { width: 7, height: 5 },
+        { width: 10, height: 8 },
+        { width: 11, height: 8.5 },
+        { width: 14, height: 11 },
+        { width: 18, height: 12 },
+        { width: 20, height: 16 },
+        { width: 24, height: 16 },
+        { width: 24, height: 18 },
+        { width: 24, height: 20 },
+        { width: 30, height: 20 },
+        { width: 36, height: 24 },
+        { width: 40, height: 30 }
+      ],
+      portrait: [
+        { width: 5, height: 7 },
+        { width: 8, height: 10 },
+        { width: 8.5, height: 11 },
+        { width: 11, height: 14 },
+        { width: 12, height: 18 },
+        { width: 16, height: 20 },
+        { width: 16, height: 24 },
+        { width: 18, height: 24 },
+        { width: 20, height: 24 },
+        { width: 20, height: 30 },
+        { width: 24, height: 36 },
+        { width: 30, height: 40 }
+      ],
+      square: [
+        { width: 8, height: 8 },
+        { width: 10, height: 10 },
+        { width: 12, height: 12 },
+        { width: 16, height: 16 },
+        { width: 20, height: 20 }
+      ]
+    };
+
+    // DPI levels for calculation
+    const dpiLevels = [300, 150, 100];
+
+    // Event Listeners
+    uploadSection.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    uploadSection.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadSection.classList.add('dragging');
+    });
+
+    uploadSection.addEventListener('dragleave', () => {
+      uploadSection.classList.remove('dragging');
+    });
+
+    uploadSection.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadSection.classList.remove('dragging');
+      
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleFile(e.target.files[0]);
+      }
+    });
+
+    resetButton.addEventListener('click', resetCalculator);
+
+    // Functions
+    function handleFile(file) {
+      // Check file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        alert('Please upload a valid image file (JPG, PNG, or WebP)');
+        return;
+      }
+      
+      // Check file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size should be less than 10MB');
+        return;
+      }
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imagePreview.src = e.target.result;
+        
+        // Load image to get dimensions
+        const img = new Image();
+        img.onload = () => {
+          const width = img.width;
+          const height = img.height;
+          const aspectRatio = parseFloat((width / height).toFixed(2));
+          
+          let orientation;
+          if (Math.abs(aspectRatio - 1) < 0.05) {
+            orientation = 'square';
+          } else if (width > height) {
+            orientation = 'landscape';
+          } else {
+            orientation = 'portrait';
+          }
+          
+          const data = {
+            width,
+            height,
+            aspectRatio,
+            orientation
+          };
+          
+          // Update UI
+          dimensionsEl.textContent = `${width} × ${height} px`;
+          orientationEl.textContent = orientation.charAt(0).toUpperCase() + orientation.slice(1);
+          aspectRatioEl.textContent = aspectRatio;
+          
+          calculateOptimalSizes(data);
+          
+          // Show results section
+          uploadSection.classList.add('hidden');
+          resultsSection.classList.remove('hidden');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function calculateOptimalSizes(data) {
+      const { width, height, aspectRatio, orientation } = data;
+      
+      dpiLevels.forEach(dpi => {
+        const maxWidthInches = width / dpi;
+        const maxHeightInches = height / dpi;
+        
+        // Filter standard sizes based on orientation and max printable size
+        let filteredSizes = standardSizes[orientation].filter(size => {
+          // Check if the size fits within max printable dimensions
+          if (size.width > maxWidthInches || size.height > maxHeightInches) {
+            return false;
+          }
+          
+          // Check if aspect ratio matches within tolerance (2%)
+          const sizeRatio = size.width / size.height;
+          const tolerance = 0.02; // 2%
+          
+          if (orientation === 'landscape' || orientation === 'portrait') {
+            return Math.abs(sizeRatio - aspectRatio) / aspectRatio <= tolerance;
+          }
+          return true; // For square images, all square sizes are valid
+        });
+        
+        // Sort by size (larger first)
+        filteredSizes.sort((a, b) => (b.width * b.height) - (a.width * a.height));
+        
+        // Update UI with results
+        const sizesArray = filteredSizes.map(size => `${size.width}×${size.height}`);
+        const sizesElement = document.getElementById(`sizes-${dpi}`);
+        
+        if (sizesArray.length > 0) {
+          let html = '<div class="size-tags-container">';
+          sizesArray.forEach(size => {
+            const tagClass = dpi === 300 ? 'size-tag-excellent' : dpi === 150 ? 'size-tag-good' : 'size-tag-acceptable';
+            html += `<span class="size-tag ${tagClass}">${size}</span>`;
+          });
+          html += '</div>';
+          sizesElement.innerHTML = html;
+        } else {
+          sizesElement.innerHTML = '<span style="font-style: italic; color: #6b7280;">No standard sizes match</span>';
+        }
+      });
+    }
+
+    function resetCalculator() {
+      // Reset file input
+      fileInput.value = '';
+      
+      // Hide results section and show upload section
+      resultsSection.classList.add('hidden');
+      uploadSection.classList.remove('hidden');
+      
+      // Clear results
+      dimensionsEl.textContent = '-';
+      orientationEl.textContent = '-';
+      aspectRatioEl.textContent = '-';
+      
+      sizes300El.innerHTML = '<span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>';
+      sizes150El.innerHTML = '<span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>';
+      sizes100El.innerHTML = '<span style="font-style: italic; color: #6b7280;">Upload an image to see recommendations</span>';
+    }
+  </script>
+</body>
+</html>
