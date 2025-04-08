@@ -408,7 +408,7 @@
     const sizes150El = document.getElementById('sizes-150');
     const sizes100El = document.getElementById('sizes-100');
 
-    // Standard US print sizes grouped by orientation
+    // Expanded set of standard US print sizes grouped by orientation
     const standardSizes = {
       landscape: [
         { width: 7, height: 5 },
@@ -422,7 +422,14 @@
         { width: 24, height: 20 },
         { width: 30, height: 20 },
         { width: 36, height: 24 },
-        { width: 40, height: 30 }
+        { width: 40, height: 30 },
+        { width: 40, height: 60 },   // Added from your list
+        { width: 15, height: 10 },   // Common landscape sizes
+        { width: 18, height: 12 },
+        { width: 30, height: 24 },
+        { width: 36, height: 30 },
+        { width: 45, height: 30 },
+        { width: 60, height: 40 }
       ],
       portrait: [
         { width: 5, height: 7 },
@@ -436,14 +443,20 @@
         { width: 20, height: 24 },
         { width: 20, height: 30 },
         { width: 24, height: 36 },
-        { width: 30, height: 40 }
+        { width: 30, height: 40 },
+        { width: 60, height: 40 }    // Added from your list
       ],
       square: [
         { width: 8, height: 8 },
         { width: 10, height: 10 },
         { width: 12, height: 12 },
         { width: 16, height: 16 },
-        { width: 20, height: 20 }
+        { width: 20, height: 20 },
+        { width: 24, height: 24 },
+        { width: 30, height: 30 },
+        { width: 36, height: 36 },
+        { width: 40, height: 40 },
+        { width: 48, height: 48 }    // Added from your list
       ]
     };
 
@@ -554,15 +567,35 @@
             return false;
           }
           
-          // Check if aspect ratio matches within tolerance (2%)
+          // More relaxed aspect ratio tolerance (15%)
           const sizeRatio = size.width / size.height;
-          const tolerance = 0.02; // 2%
+          const tolerance = 0.15; // 15%
           
-          if (orientation === 'landscape' || orientation === 'portrait') {
-            return Math.abs(sizeRatio - aspectRatio) / aspectRatio <= tolerance;
-          }
-          return true; // For square images, all square sizes are valid
+          return Math.abs(sizeRatio - aspectRatio) / aspectRatio <= tolerance;
         });
+        
+        // If no sizes match with the tolerance, find the closest matches
+        if (filteredSizes.length === 0) {
+          // Get all sizes that fit within max dimensions
+          let sizesThatFit = standardSizes[orientation].filter(size => 
+            size.width <= maxWidthInches && size.height <= maxHeightInches
+          );
+          
+          // If there are sizes that fit, find the closest by aspect ratio
+          if (sizesThatFit.length > 0) {
+            // Calculate ratio difference for each size
+            sizesThatFit.forEach(size => {
+              const sizeRatio = size.width / size.height;
+              size.ratioDifference = Math.abs(sizeRatio - aspectRatio) / aspectRatio;
+            });
+            
+            // Sort by ratio difference
+            sizesThatFit.sort((a, b) => a.ratioDifference - b.ratioDifference);
+            
+            // Take the top 3 closest matches
+            filteredSizes = sizesThatFit.slice(0, 3);
+          }
+        }
         
         // Sort by size (larger first)
         filteredSizes.sort((a, b) => (b.width * b.height) - (a.width * a.height));
