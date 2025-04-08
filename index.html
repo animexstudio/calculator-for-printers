@@ -322,6 +322,7 @@
       border: 1px solid #e5e7eb;
       border-radius: 0.5rem;
       overflow: hidden;
+      margin-bottom: 1.5rem;
     }
 
     .results-table th {
@@ -378,6 +379,11 @@
       color: #b91c1c;
     }
 
+    .size-tag-ratio {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+
     .size-tags-container {
       display: flex;
       flex-wrap: wrap;
@@ -398,6 +404,58 @@
 
     .info-list li {
       margin-bottom: 0.25rem;
+    }
+
+    /* Size chart */
+    .size-chart {
+      margin-top: 1.5rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .size-chart-title {
+      background-color: #f9fafb;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      font-weight: 600;
+    }
+
+    .size-chart-content {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 1rem;
+      gap: 1rem;
+      justify-content: space-around;
+    }
+
+    .ratio-group {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .ratio-group-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .ratio-sizes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ratio-size {
+      border: 1px solid #e5e7eb;
+      padding: 0.5rem;
+      background-color: #f9fafb;
+      font-size: 0.875rem;
+      min-width: 100px;
+    }
+
+    .ratio-size-match {
+      border: 2px solid #3b82f6;
+      background-color: #eff6ff;
     }
 
     /* History section */
@@ -501,6 +559,80 @@
       font-style: italic;
     }
 
+    /* Visual size reference */
+    .visual-reference {
+      margin-top: 2rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .visual-reference-title {
+      background-color: #f9fafb;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      font-weight: 600;
+    }
+
+    .visual-reference-content {
+      padding: 1rem;
+      position: relative;
+    }
+
+    .visual-reference-sofa {
+      width: 100%;
+      height: 120px;
+      background-color: #f3f4f6;
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 0.875rem;
+    }
+
+    .visual-reference-sofa::before {
+      content: "Sofa (90 inches / 229 cm)";
+      position: absolute;
+      bottom: -1.5rem;
+      width: 100%;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+
+    .visual-frames {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem 0 3rem 0;
+    }
+
+    .visual-frame {
+      border: 2px solid #3b82f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3b82f6;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background-color: rgba(219, 234, 254, 0.5);
+    }
+
+    /* Ratio badges */
+    .ratio-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background-color: #eff6ff;
+      color: #1e40af;
+      border-radius: 0.25rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+
     /* Utility classes */
     .mt-4 {
       margin-top: 1rem;
@@ -509,6 +641,20 @@
     .actions {
       display: flex;
       gap: 0.5rem;
+    }
+
+    .flex-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .font-bold {
+      font-weight: 700;
+    }
+
+    .mb-2 {
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
@@ -523,6 +669,7 @@
       <div class="card">
         <div class="tabs">
           <div class="tab active" data-tab="calculator">Calculator</div>
+          <div class="tab" data-tab="sizeguide">Size Guide</div>
           <div class="tab" data-tab="history">Upload History</div>
         </div>
 
@@ -554,6 +701,100 @@
             <div id="results-content" class="mt-4">
               <!-- Image results will be injected here -->
             </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="sizeguide-tab">
+          <h2 class="section-title">Standard Print Size Guide</h2>
+          <p>This guide shows common print sizes organized by their aspect ratios:</p>
+          
+          <div class="size-chart">
+            <div class="size-chart-content">
+              <div class="ratio-group">
+                <div class="ratio-group-title">2:3 Ratio</div>
+                <div class="ratio-sizes">
+                  <div class="ratio-size">24×36 in (61×91 cm)</div>
+                  <div class="ratio-size">20×30 in (51×76 cm)</div>
+                  <div class="ratio-size">16×24 in (41×61 cm)</div>
+                  <div class="ratio-size">12×18 in (30×46 cm)</div>
+                  <div class="ratio-size">8×12 in (20×30 cm)</div>
+                  <div class="ratio-size">4×6 in (10×15 cm)</div>
+                </div>
+              </div>
+              
+              <div class="ratio-group">
+                <div class="ratio-group-title">3:4 Ratio</div>
+                <div class="ratio-sizes">
+                  <div class="ratio-size">18×24 in (46×61 cm)</div>
+                  <div class="ratio-size">15×20 in (38×51 cm)</div>
+                  <div class="ratio-size">12×16 in (30×41 cm)</div>
+                  <div class="ratio-size">9×12 in (23×30 cm)</div>
+                  <div class="ratio-size">6×8 in (15×20 cm)</div>
+                </div>
+              </div>
+              
+              <div class="ratio-group">
+                <div class="ratio-group-title">4:5 Ratio</div>
+                <div class="ratio-sizes">
+                  <div class="ratio-size">24×30 in (61×76 cm)</div>
+                  <div class="ratio-size">20×25 in (50.8×63.5 cm)</div>
+                  <div class="ratio-size">16×20 in (41×51 cm)</div>
+                  <div class="ratio-size">12×15 in (30.5×38 cm)</div>
+                  <div class="ratio-size">8×10 in (20×25 cm)</div>
+                </div>
+              </div>
+              
+              <div class="ratio-group">
+                <div class="ratio-group-title">11:14 Ratio</div>
+                <div class="ratio-sizes">
+                  <div class="ratio-size">22×28 in (55.9×71 cm)</div>
+                  <div class="ratio-size">11×14 in (28×36 cm)</div>
+                </div>
+              </div>
+              
+              <div class="ratio-group">
+                <div class="ratio-group-title">A Series (√2:1)</div>
+                <div class="ratio-sizes">
+                  <div class="ratio-size">A1: 23.4×33.1 in (59.4×84.1 cm)</div>
+                  <div class="ratio-size">A2: 16.5×23.4 in (42×59.4 cm)</div>
+                  <div class="ratio-size">A3: 11.7×16.5 in (29.7×42 cm)</div>
+                  <div class="ratio-size">A4: 8.3×11.7 in (21×29.7 cm)</div>
+                </div>
+              </div>
+              
+              <div class="ratio-group">
+                <div class="ratio-group-title">Square (1:1)</div>
+                <div class="ratio-sizes">
+                  <div class="ratio-size">24×24 in (61×61 cm)</div>
+                  <div class="ratio-size">20×20 in (51×51 cm)</div>
+                  <div class="ratio-size">16×16 in (41×41 cm)</div>
+                  <div class="ratio-size">12×12 in (30×30 cm)</div>
+                  <div class="ratio-size">10×10 in (25×25 cm)</div>
+                  <div class="ratio-size">8×8 in (20×20 cm)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="visual-reference">
+            <div class="visual-reference-title">Visual Size Reference</div>
+            <div class="visual-reference-content">
+              <p>This illustration shows approximate sizes relative to a standard 90-inch sofa:</p>
+              <div class="visual-frames">
+                <!-- These will be populated by JavaScript -->
+              </div>
+              <div class="visual-reference-sofa"></div>
+            </div>
+          </div>
+          
+          <div class="info-text mt-4">
+            <p><strong>Tips for choosing the right print size:</strong></p>
+            <ul class="info-list">
+              <li>Match your image's aspect ratio to the closest standard ratio for best results</li>
+              <li>For wall art, larger prints (16+ inches) typically work best when viewed from 5+ feet away</li>
+              <li>Consider the viewing distance - higher DPI is needed for closer viewing</li>
+              <li>For framing, remember to account for mat and frame dimensions beyond the print size</li>
+            </ul>
           </div>
         </div>
 
@@ -592,9 +833,93 @@
     const historyContainer = document.getElementById('history-container');
     const exportHistoryButton = document.getElementById('export-history-button');
     const clearHistoryButton = document.getElementById('clear-history-button');
+    const visualFrames = document.querySelector('.visual-frames');
 
     // Current session storage
     let currentResults = [];
+
+    // Standard Ratio Definitions with exact decimal values
+    const standardRatios = {
+      'square': { ratio: 1, name: "Square (1:1)" },
+      '2:3': { ratio: 2/3, name: "2:3 Ratio" },
+      '3:4': { ratio: 3/4, name: "3:4 Ratio" },
+      '4:5': { ratio: 4/5, name: "4:5 Ratio" },
+      '11:14': { ratio: 11/14, name: "11:14 Ratio" },
+      'a-series': { ratio: Math.SQRT1_2, name: "A Series (√2:1)" }
+    };
+
+    // Standard sizes organized by ratio categories
+    const standardSizes = {
+      'square': [
+        { width: 24, height: 24, cm_width: 61, cm_height: 61 },
+        { width: 20, height: 20, cm_width: 51, cm_height: 51 },
+        { width: 16, height: 16, cm_width: 41, cm_height: 41 },
+        { width: 12, height: 12, cm_width: 30, cm_height: 30 },
+        { width: 10, height: 10, cm_width: 25, cm_height: 25 },
+        { width: 8, height: 8, cm_width: 20, cm_height: 20 }
+      ],
+      '2:3': [
+        { width: 24, height: 36, cm_width: 61, cm_height: 91 },
+        { width: 20, height: 30, cm_width: 51, cm_height: 76 },
+        { width: 16, height: 24, cm_width: 41, cm_height: 61 },
+        { width: 12, height: 18, cm_width: 30, cm_height: 46 },
+        { width: 8, height: 12, cm_width: 20, cm_height: 30 },
+        { width: 4, height: 6, cm_width: 10, cm_height: 15 }
+      ],
+      '3:4': [
+        { width: 18, height: 24, cm_width: 46, cm_height: 61 },
+        { width: 15, height: 20, cm_width: 38, cm_height: 51 },
+        { width: 12, height: 16, cm_width: 30, cm_height: 41 },
+        { width: 9, height: 12, cm_width: 23, cm_height: 30 },
+        { width: 6, height: 8, cm_width: 15, cm_height: 20 }
+      ],
+     '4:5': [
+        { width: 24, height: 30, cm_width: 61, cm_height: 76 },
+        { width: 20, height: 25, cm_width: 50.8, cm_height: 63.5 },
+        { width: 16, height: 20, cm_width: 41, cm_height: 51 },
+        { width: 12, height: 15, cm_width: 30.5, cm_height: 38 },
+        { width: 8, height: 10, cm_width: 20, cm_height: 25 }
+      ],
+      '11:14': [
+        { width: 22, height: 28, cm_width: 55.9, cm_height: 71 },
+        { width: 11, height: 14, cm_width: 28, cm_height: 36 }
+      ],
+      'a-series': [
+        { width: 23.4, height: 33.1, cm_width: 59.4, cm_height: 84.1, name: 'A1' },
+        { width: 16.5, height: 23.4, cm_width: 42, cm_height: 59.4, name: 'A2' },
+        { width: 11.7, height: 16.5, cm_width: 29.7, cm_height: 42, name: 'A3' },
+        { width: 8.3, height: 11.7, cm_width: 21, cm_height: 29.7, name: 'A4' }
+      ]
+    };
+
+    // Create visual reference frames
+    function createVisualFrames() {
+      if (!visualFrames) return;
+      
+      // Clear any existing frames
+      visualFrames.innerHTML = '';
+      
+      // Add representative sizes
+      const frames = [
+        { width: 24, height: 36, label: '24"×36"' },
+        { width: 20, height: 20, label: '20"×20"' },
+        { width: 16, height: 20, label: '16"×20"' },
+        { width: 11, height: 14, label: '11"×14"' },
+        { width: 8, height: 10, label: '8"×10"' }
+      ];
+      
+      // Scale factor (90 inches is the sofa width)
+      const scale = 250 / 90;
+      
+      frames.forEach(frame => {
+        const frameEl = document.createElement('div');
+        frameEl.className = 'visual-frame';
+        frameEl.style.width = `${frame.width * scale}px`;
+        frameEl.style.height = `${frame.height * scale}px`;
+        frameEl.textContent = frame.label;
+        visualFrames.appendChild(frameEl);
+      });
+    }
 
     // Tab switching
     tabs.forEach(tab => {
@@ -611,78 +936,14 @@
         });
         document.getElementById(`${tabName}-tab`).classList.add('active');
         
-        // Load history if needed
+        // Initialize content if needed
         if (tabName === 'history') {
           displayHistory();
+        } else if (tabName === 'sizeguide') {
+          createVisualFrames();
         }
       });
     });
-
-    // Expanded set of standard US print sizes grouped by orientation
-    const standardSizes = {
-      landscape: [
-        { width: 7, height: 5 },
-        { width: 10, height: 8 },
-        { width: 11, height: 8.5 },
-        { width: 14, height: 11 },
-        { width: 18, height: 12 },
-        { width: 20, height: 16 },
-        { width: 24, height: 16 },
-        { width: 24, height: 18 },
-        { width: 24, height: 20 },
-        { width: 30, height: 20 },
-        { width: 36, height: 24 },
-        { width: 40, height: 30 },
-        { width: 40, height: 60 },
-        { width: 15, height: 10 },
-        { width: 18, height: 12 },
-        { width: 30, height: 24 },
-        { width: 36, height: 30 },
-        { width: 45, height: 30 },
-        { width: 60, height: 40 }
-      ],
-      portrait: [
-        { width: 5, height: 7 },
-        { width: 8, height: 10 },
-        { width: 8.5, height: 11 },
-        { width: 11, height: 14 },
-        { width: 12, height: 18 },
-        { width: 16, height: 20 },
-        { width: 16, height: 24 },
-        { width: 18, height: 24 },
-        { width: 20, height: 24 },
-        { width: 20, height: 30 },
-        { width: 24, height: 36 },
-        { width: 30, height: 40 },
-        { width: 60, height: 40 }
-      ],
-      square: [
-        { width: 8, height: 8 },
-        { width: 10, height: 10 },
-        { width: 12, height: 12 },
-        { width: 16, height: 16 },
-        { width: 20, height: 20 },
-        { width: 24, height: 24 },
-        { width: 30, height: 30 },
-        { width: 36, height: 36 },
-        { width: 40, height: 40 },
-        { width: 48, height: 48 }
-      ],
-      // Add near-square sizes for paintings like Girl with Pearl Earring
-      nearsquare: [
-        { width: 8, height: 10 },
-        { width: 10, height: 12 },
-        { width: 12, height: 14 },
-        { width: 16, height: 18 },
-        { width: 18, height: 20 },
-        { width: 20, height: 22 },
-        { width: 24, height: 27 },
-        { width: 30, height: 34 }
-      ]
-    };
-
-    // DPI levels for calculation
-    const dpiLevels = [300, 150, 100];
 
     // Event Listeners
     uploadSection.addEventListener('click', () => {
@@ -868,28 +1129,63 @@
         img.onload = () => {
           const width = img.width;
           const height = img.height;
-          const aspectRatio = parseFloat((width / height).toFixed(2));
+          const aspectRatio = width / height;
+          const roundedAspectRatio = parseFloat(aspectRatio.toFixed(4));
           
-          // Determine orientation
-          let orientation;
-          if (Math.abs(aspectRatio - 1) < 0.1) {
-            // If it's within 10% of square, consider it square
+          // Determine orientation and matching standard ratios
+          let orientation, matchingRatio;
+          
+          // Find the closest standard ratio
+          let closestRatio = null;
+          let smallestDifference = Infinity;
+          
+          for (const [ratioKey, ratioInfo] of Object.entries(standardRatios)) {
+            const difference = Math.abs(ratioInfo.ratio - roundedAspectRatio) / roundedAspectRatio;
+            if (difference < smallestDifference) {
+              smallestDifference = difference;
+              closestRatio = { key: ratioKey, ...ratioInfo };
+            }
+          }
+          
+          // Set orientation based on aspect ratio
+          if (Math.abs(aspectRatio - 1) < 0.05) {
             orientation = 'square';
-          } else if (Math.abs(aspectRatio - 1.14) < 0.1) {
-            // Near-square paintings like Vermeer's Girl with Pearl Earring (ratio ~1.14)
-            orientation = 'nearsquare';
+            matchingRatio = 'square';
           } else if (width > height) {
             orientation = 'landscape';
+            // For landscape, convert portrait ratios to landscape
+            if (closestRatio && (closestRatio.key === '2:3' || closestRatio.key === '3:4' || 
+                closestRatio.key === '4:5' || closestRatio.key === '11:14')) {
+              closestRatio.ratio = 1 / closestRatio.ratio;
+              matchingRatio = closestRatio.key;
+            } else {
+              matchingRatio = closestRatio ? closestRatio.key : null;
+            }
           } else {
             orientation = 'portrait';
+            matchingRatio = closestRatio ? closestRatio.key : null;
+          }
+          
+          // Determine ratio match quality
+          let ratioMatchQuality = 'poor';
+          if (smallestDifference < 0.03) {
+            ratioMatchQuality = 'excellent';
+          } else if (smallestDifference < 0.1) {
+            ratioMatchQuality = 'good';
+          } else if (smallestDifference < 0.2) {
+            ratioMatchQuality = 'fair';
           }
           
           const imageData = {
             filename: file.name,
             width,
             height,
-            aspectRatio,
+            aspectRatio: roundedAspectRatio,
             orientation,
+            matchingRatio,
+            ratioMatchQuality,
+            closestRatio,
+            smallestDifference,
             thumbnail
           };
           
@@ -925,85 +1221,189 @@
       // 3. Get the data URL with reduced quality
     }
 
-    // Calculate optimal print sizes
+    // Calculate optimal print sizes based on standard ratios
     function calculateOptimalSizes(imageData) {
-      const { width, height, aspectRatio, orientation } = imageData;
-      const results = {};
+      const { width, height, aspectRatio, orientation, matchingRatio } = imageData;
+      const results = {
+        dpi: {}, // For DPI-based recommendations
+        ratios: {} // For ratio-based recommendations
+      };
       
-      // Collect all possible orientations to check
-      let allOrientations = [orientation];
+      // DPI levels for calculation
+      const dpiLevels = [300, 150, 100];
       
-      // For near-square images, also check square, landscape, and portrait sizes
-      if (orientation === 'nearsquare' || Math.abs(aspectRatio - 1) < 0.2) {
-        allOrientations = ['square', 'landscape', 'portrait', 'nearsquare'];
-      }
-      
-      // For landscape with aspect ratio close to portrait, or vice versa, add the other orientation
-      if (orientation === 'landscape' && aspectRatio < 1.5) {
-        allOrientations.push('portrait');
-      } else if (orientation === 'portrait' && aspectRatio > 0.7) {
-        allOrientations.push('landscape');
-      }
-      
+      // Calculate DPI-based recommendations
       dpiLevels.forEach(dpi => {
         const maxWidthInches = width / dpi;
         const maxHeightInches = height / dpi;
         
-        // Fallback collection for if nothing matched
-        let allPossibleSizes = [];
+        results.dpi[dpi] = [];
         
-        // Check each possible orientation
-        allOrientations.forEach(currentOrientation => {
-          if (!standardSizes[currentOrientation]) return;
-          
-          // Get sizes that fit the max dimensions
-          standardSizes[currentOrientation].forEach(size => {
-            if (size.width <= maxWidthInches && size.height <= maxHeightInches) {
-              // Calculate how well it matches the aspect ratio (lower is better)
-              const sizeRatio = size.width / size.height;
-              const ratioDifference = Math.abs(sizeRatio - aspectRatio) / aspectRatio;
+        // First check matching ratio if available
+        if (matchingRatio && standardSizes[matchingRatio]) {
+          let matchingSizes = standardSizes[matchingRatio]
+            .filter(size => {
+              // Check if size fits within max printable dimensions
+              let widthFits, heightFits;
               
-              allPossibleSizes.push({
-                ...size,
-                orientation: currentOrientation,
-                ratioDifference,
-                area: size.width * size.height
-              });
-            }
-          });
-        });
-        
-        // If we have possible sizes, sort and filter them
-        let filteredSizes = [];
-        if (allPossibleSizes.length > 0) {
-          // First sort by ratio difference (aspect ratio match)
-          allPossibleSizes.sort((a, b) => a.ratioDifference - b.ratioDifference);
-          
-          // Get the best matches (tolerance: 25%)
-          let bestMatches = allPossibleSizes.filter(size => size.ratioDifference <= 0.25);
-          
-          // If no sizes within tolerance, take the 5 closest matches
-          if (bestMatches.length === 0) {
-            bestMatches = allPossibleSizes.slice(0, 5);
-          }
+              if (orientation === 'landscape' && matchingRatio !== 'square') {
+                // For landscape, swap width/height if the ratio is normally portrait
+                if (size.width < size.height) {
+                  widthFits = size.height <= maxWidthInches;
+                  heightFits = size.width <= maxHeightInches;
+                } else {
+                  widthFits = size.width <= maxWidthInches;
+                  heightFits = size.height <= maxHeightInches;
+                }
+              } else {
+                widthFits = size.width <= maxWidthInches;
+                heightFits = size.height <= maxHeightInches;
+              }
+              
+              return widthFits && heightFits;
+            })
+            .map(size => {
+              if (orientation === 'landscape' && matchingRatio !== 'square' && size.width < size.height) {
+                // Swap dimensions for landscape if the standard size is portrait
+                return {
+                  width: size.height,
+                  height: size.width,
+                  cm_width: size.cm_height,
+                  cm_height: size.cm_width,
+                  name: size.name,
+                  ratio: matchingRatio
+                };
+              }
+              return { ...size, ratio: matchingRatio };
+            });
           
           // Sort by size (larger first)
-          bestMatches.sort((a, b) => (b.area) - (a.area));
+          matchingSizes.sort((a, b) => (b.width * b.height) - (a.width * a.height));
           
-          // Take the top sizes
-          filteredSizes = bestMatches.slice(0, 8);
+          // Add top matching sizes
+          results.dpi[dpi] = matchingSizes.slice(0, 5);
         }
         
-        // Format the sizes for display and storage
-        results[dpi] = filteredSizes.map(size => `${size.width}×${size.height}`);
+        // If not enough matching sizes, check all other standard ratios
+        if (results.dpi[dpi].length < 3) {
+          let otherSizes = [];
+          
+          Object.entries(standardSizes).forEach(([ratioKey, sizes]) => {
+            if (ratioKey === matchingRatio) return; // Skip already processed ratio
+            
+            sizes.forEach(size => {
+              // Check if size fits within max printable dimensions
+              let widthFits, heightFits;
+              let adjustedSize = { ...size, ratio: ratioKey };
+              
+              if (orientation === 'landscape' && size.width < size.height) {
+                // For landscape, swap dimensions if the standard size is portrait
+                adjustedSize = {
+                  width: size.height,
+                  height: size.width,
+                  cm_width: size.cm_height,
+                  cm_height: size.cm_width,
+                  name: size.name,
+                  ratio: ratioKey
+                };
+                
+                widthFits = adjustedSize.width <= maxWidthInches;
+                heightFits = adjustedSize.height <= maxHeightInches;
+              } else {
+                widthFits = size.width <= maxWidthInches;
+                heightFits = size.height <= maxHeightInches;
+              }
+              
+              if (widthFits && heightFits) {
+                otherSizes.push(adjustedSize);
+              }
+            });
+          });
+          
+          // Calculate ratio difference for each size
+          otherSizes.forEach(size => {
+            const sizeRatio = size.width / size.height;
+            size.ratioDifference = Math.abs(sizeRatio - aspectRatio) / aspectRatio;
+          });
+          
+          // Sort by ratio difference (best match first)
+          otherSizes.sort((a, b) => a.ratioDifference - b.ratioDifference);
+          
+          // Add best matching sizes from other ratios
+          results.dpi[dpi] = [...results.dpi[dpi], ...otherSizes.slice(0, 5 - results.dpi[dpi].length)];
+        }
+      });
+      
+      // Organize results by standard ratio categories
+      Object.entries(standardSizes).forEach(([ratioKey, sizes]) => {
+        results.ratios[ratioKey] = [];
+        
+        // Filter sizes that fit within 300 DPI (high quality)
+        const maxWidthInches = width / 300;
+        const maxHeightInches = height / 300;
+        
+        sizes.forEach(size => {
+          // Check if size fits within max printable dimensions
+          let widthFits, heightFits;
+          let adjustedSize = { ...size, ratio: ratioKey };
+          
+          if (orientation === 'landscape' && size.width < size.height) {
+            // For landscape, swap dimensions if the standard size is portrait
+            adjustedSize = {
+              width: size.height,
+              height: size.width,
+              cm_width: size.cm_height,
+              cm_height: size.cm_width,
+              name: size.name,
+              ratio: ratioKey
+            };
+            
+            widthFits = adjustedSize.width <= maxWidthInches;
+            heightFits = adjustedSize.height <= maxHeightInches;
+          } else {
+            widthFits = size.width <= maxWidthInches;
+            heightFits = size.height <= maxHeightInches;
+          }
+          
+          if (widthFits && heightFits) {
+            // Calculate aspect ratio similarity
+            const sizeRatio = adjustedSize.width / adjustedSize.height;
+            adjustedSize.ratioDifference = Math.abs(sizeRatio - aspectRatio) / aspectRatio;
+            results.ratios[ratioKey].push(adjustedSize);
+          }
+        });
       });
       
       return results;
     }
 
+    // Format size for display
+    function formatSize(size) {
+      let displayName = `${size.width}×${size.height} in (${size.cm_width}×${size.cm_height} cm)`;
+      if (size.name) {
+        displayName = `${size.name}: ${displayName}`;
+      }
+      return displayName;
+    }
+
     // Update results UI
     function updateResultsUI(imageData, results, index) {
       const dataContainer = document.getElementById(`data-${index}`);
+      
+      // Determine which standard ratio best matches the image
+      const matchingRatioName = imageData.closestRatio ? imageData.closestRatio.name : "Custom";
+      const matchQuality = imageData.ratioMatchQuality;
+      
+      let matchMessage = "";
+      if (matchQuality === 'excellent') {
+        matchMessage = `Your image perfectly matches the ${matchingRatioName} proportion, making it ideal for these standard print sizes.`;
+      } else if (matchQuality === 'good') {
+        matchMessage = `Your image closely matches the ${matchingRatioName} proportion, making it well-suited for these standard print sizes.`;
+      } else if (matchQuality === 'fair') {
+        matchMessage = `Your image somewhat matches the ${matchingRatioName} proportion. Minor cropping may be needed for perfect fit.`;
+      } else {
+        matchMessage = `Your image has a custom proportion that doesn't closely match standard print ratios. Consider cropping to a standard ratio for best results.`;
+      }
       
       let html = `
         <div class="analysis-section">
@@ -1020,21 +1420,26 @@
               </div>
               <div>
                 <p class="analysis-item-label">Aspect Ratio</p>
-                <p class="analysis-item-value">${imageData.aspectRatio}</p>
+                <p class="analysis-item-value">${imageData.aspectRatio.toFixed(2)}</p>
+              </div>
+              <div>
+                <p class="analysis-item-label">Matching Ratio</p>
+                <p class="analysis-item-value">${matchingRatioName}</p>
               </div>
             </div>
+            <p class="mt-4">${matchMessage}</p>
           </div>
         </div>
         
         <div>
-          <h2 class="section-title">Optimal Print Sizes</h2>
+          <h2 class="section-title">Recommended Print Sizes by Quality</h2>
           <div style="overflow-x: auto;">
             <table class="results-table">
               <thead>
                 <tr>
                   <th>Quality</th>
                   <th>DPI</th>
-                  <th>Recommended Sizes (inches)</th>
+                  <th>Recommended Sizes</th>
                 </tr>
               </thead>
               <tbody>
@@ -1042,26 +1447,60 @@
                   <td class="quality-excellent">Excellent</td>
                   <td>300 DPI</td>
                   <td>
-                    ${createSizeTags(results[300], 'excellent')}
+                    ${createSizeTags(results.dpi[300], 'excellent')}
                   </td>
                 </tr>
                 <tr>
                   <td class="quality-good">Good</td>
                   <td>150 DPI</td>
                   <td>
-                    ${createSizeTags(results[150], 'good')}
+                    ${createSizeTags(results.dpi[150], 'good')}
                   </td>
                 </tr>
                 <tr>
                   <td class="quality-acceptable">Acceptable</td>
                   <td>100 DPI</td>
                   <td>
-                    ${createSizeTags(results[100], 'acceptable')}
+                    ${createSizeTags(results.dpi[100], 'acceptable')}
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
+      `;
+      
+      // Add recommended sizes by ratio category
+      html += `
+        <h2 class="section-title mt-4">Available Sizes by Standard Ratio</h2>
+        <p>These are standard print sizes that fit your image resolution at professional quality (300 DPI):</p>
+      `;
+      
+      // Get the best matching ratio to highlight
+      const bestRatio = imageData.matchingRatio || null;
+      
+      // Display ratio categories with available sizes
+      Object.entries(results.ratios).forEach(([ratioKey, sizes]) => {
+        if (sizes.length > 0) {
+          const isRatioMatch = ratioKey === bestRatio;
+          const ratioName = standardRatios[ratioKey]?.name || ratioKey;
+          
+          html += `
+            <div class="mb-2">
+              <div class="ratio-badge">${ratioName}</div>
+              ${isRatioMatch ? '<span class="ratio-badge" style="background-color: #d1fae5; color: #065f46;">Best Match</span>' : ''}
+              <div class="flex-wrap">
+                ${sizes.map(size => {
+                  const formatDifference = size.ratioDifference < 0.05 ? 'size-tag-excellent' : 
+                                          size.ratioDifference < 0.1 ? 'size-tag-good' : 'size-tag-acceptable';
+                  return `<span class="size-tag ${formatDifference}">${formatSize(size)}</span>`;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }
+      });
+      
+      html += `
           <div class="info-text">
             <p><strong>DPI (Dots Per Inch)</strong> indicates print quality:</p>
             <ul class="info-list">
@@ -1084,7 +1523,8 @@
       
       let html = '<div class="size-tags-container">';
       sizes.forEach(size => {
-        html += `<span class="size-tag size-tag-${quality}">${size}</span>`;
+        const displayName = formatSize(size);
+        html += `<span class="size-tag size-tag-${quality}">${displayName}</span>`;
       });
       html += '</div>';
       
@@ -1104,6 +1544,9 @@
           height: imageData.height,
           aspectRatio: imageData.aspectRatio,
           orientation: imageData.orientation,
+          matchingRatio: imageData.matchingRatio,
+          closestRatio: imageData.closestRatio,
+          ratioMatchQuality: imageData.ratioMatchQuality,
           thumbnail: imageData.thumbnail
         },
         results,
@@ -1132,6 +1575,8 @@
       
       // Process most recent first
       history.slice().reverse().forEach((item, index) => {
+        const matchingRatioName = item.imageData.closestRatio ? item.imageData.closestRatio.name : "Custom";
+        
         html += `
           <div class="history-item" data-index="${index}">
             <div class="history-item-thumbnail">
@@ -1139,7 +1584,7 @@
             </div>
             <div class="history-item-details">
               <p class="history-item-filename">${item.imageData.filename}</p>
-              <p class="history-item-dimensions">${item.imageData.width}×${item.imageData.height} (${item.imageData.orientation})</p>
+              <p class="history-item-dimensions">${item.imageData.width}×${item.imageData.height} (${matchingRatioName})</p>
               <p class="history-item-date">${new Date(item.timestamp).toLocaleString()}</p>
             </div>
           </div>
@@ -1191,7 +1636,7 @@
       `;
       resultContainer.appendChild(header);
       
-      // Add content
+      // Add content placeholder
       const content = document.createElement('div');
       content.className = 'image-content';
       content.innerHTML = `
@@ -1200,72 +1645,8 @@
             <img src="${historyItem.imageData.thumbnail}" alt="Preview">
           </div>
         </div>
-        <div class="image-data-container">
-          <div class="analysis-section">
-            <h2 class="section-title">Image Analysis</h2>
-            <div class="analysis-card">
-              <div class="analysis-grid">
-                <div>
-                  <p class="analysis-item-label">Dimensions</p>
-                  <p class="analysis-item-value">${historyItem.imageData.width} × ${historyItem.imageData.height} px</p>
-                </div>
-                <div>
-                  <p class="analysis-item-label">Orientation</p>
-                  <p class="analysis-item-value">${historyItem.imageData.orientation.charAt(0).toUpperCase() + historyItem.imageData.orientation.slice(1)}</p>
-                </div>
-                <div>
-                  <p class="analysis-item-label">Aspect Ratio</p>
-                  <p class="analysis-item-value">${historyItem.imageData.aspectRatio}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h2 class="section-title">Optimal Print Sizes</h2>
-            <div style="overflow-x: auto;">
-              <table class="results-table">
-                <thead>
-                  <tr>
-                    <th>Quality</th>
-                    <th>DPI</th>
-                    <th>Recommended Sizes (inches)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="quality-excellent">Excellent</td>
-                    <td>300 DPI</td>
-                    <td>
-                      ${createSizeTags(historyItem.results[300], 'excellent')}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="quality-good">Good</td>
-                    <td>150 DPI</td>
-                    <td>
-                      ${createSizeTags(historyItem.results[150], 'good')}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="quality-acceptable">Acceptable</td>
-                    <td>100 DPI</td>
-                    <td>
-                      ${createSizeTags(historyItem.results[100], 'acceptable')}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="info-text">
-              <p><strong>DPI (Dots Per Inch)</strong> indicates print quality:</p>
-              <ul class="info-list">
-                <li><span class="quality-excellent">300 DPI</span>: Professional quality, suitable for close viewing</li>
-                <li><span class="quality-good">150 DPI</span>: Good quality, suitable for wall art viewed from a few feet away</li>
-                <li><span class="quality-acceptable">100 DPI</span>: Acceptable for large formats viewed from a distance</li>
-              </ul>
-            </div>
-          </div>
+        <div class="image-data-container" id="history-data">
+          <p>Loading...</p>
         </div>
       `;
       resultContainer.appendChild(content);
@@ -1279,6 +1660,9 @@
         resetCalculator();
       });
       
+      // Update UI with results
+      updateResultsUI(historyItem.imageData, historyItem.results, 'history');
+      
       // Add to current results for export
       currentResults.push({
         imageData: historyItem.imageData,
@@ -1289,7 +1673,7 @@
 
     // Export to CSV
     function exportToCSV(data) {
-      if (data.length === 0) {
+     if (data.length === 0) {
         alert('No data to export.');
         return;
       }
@@ -1298,19 +1682,32 @@
       let csvContent = 'data:text/csv;charset=utf-8,';
       
       // Add headers
-      csvContent += 'Filename,Dimensions,Aspect Ratio,Orientation,Date,300 DPI Sizes,150 DPI Sizes,100 DPI Sizes\n';
+      csvContent += 'Filename,Dimensions,Aspect Ratio,Orientation,Matching Ratio,Date,300 DPI Sizes,150 DPI Sizes,100 DPI Sizes\n';
       
       // Add data rows
       data.forEach(item => {
+        const matchingRatioName = item.imageData.closestRatio ? item.imageData.closestRatio.name : "Custom";
+        
+        // Format DPI sizes
+        const dpiSizes = {};
+        dpiLevels.forEach(dpi => {
+          if (item.results.dpi && item.results.dpi[dpi]) {
+            dpiSizes[dpi] = item.results.dpi[dpi].map(formatSize).join(' | ');
+          } else {
+            dpiSizes[dpi] = '';
+          }
+        });
+        
         const row = [
           item.imageData.filename,
           `${item.imageData.width}×${item.imageData.height}`,
           item.imageData.aspectRatio,
           item.imageData.orientation,
+          matchingRatioName,
           new Date(item.timestamp).toLocaleString(),
-          (item.results[300] || []).join(' | '),
-          (item.results[150] || []).join(' | '),
-          (item.results[100] || []).join(' | ')
+          dpiSizes[300],
+          dpiSizes[150],
+          dpiSizes[100]
         ];
         
         // Escape any commas in the data
@@ -1342,6 +1739,9 @@
       resultsSection.classList.add('hidden');
       uploadSection.classList.remove('hidden');
     }
+
+    // Initialize the size guide visual frames
+    createVisualFrames();
 
     // Initialize history tab
     displayHistory();
